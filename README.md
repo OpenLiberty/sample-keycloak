@@ -54,7 +54,7 @@ Log out of the current user by visiting the logout endpoint at the http://localh
 
 ### Keycloak
 
-Keycloak was used as the OpenId Connect Provider (OP) for this sample app. The `openliberty` realm was created in Keycloak. Inside this realm, the `sample-openliberty-keycloak` client was created which has the valid redirect URI's set to `http://localhost:9090/*`, client authentication enabled, and the `microprofile-jwt` client scope enabled. Additionally, the `admin` and `user` roles were created for this realm. Lastly, the `alice` user was created which has the `user` role and the `bob` role was created which has the `admin` role and the `user` role.
+Keycloak was used as the OpenId Connect Provider (OP) for this sample app. The `openliberty` realm was created in Keycloak. Inside this realm, the `sample-openliberty-keycloak` client was created which has the valid redirect URI's set to `http://localhost:9090/*`, client authentication enabled, and the `microprofile-jwt` client scope enabled. Additionally, the `admin` and `user` roles were created for this realm. Lastly, the `alice` user was created which has the `user` role and the `bob` user was created which has the `admin` role and the `user` role.
 
 The Keycloak OP's configuration can found at the http://localhost:8080/realms/openliberty/.well-known/openid-configuration URL.
 
@@ -86,7 +86,7 @@ The `mp.jwt.verify.issuer` should match the `issuer` value in the Keycloak OP co
 
 The `gateway` service is used to obtain a JWT access token from Keycloak and propagates it to the MicroProfile JWT secured `system` service.
 
-For the `gateway` service, an `@OpenIdAuthenticationMechanismDefinition` is defined which has its `providerURI` set to the Keycloak OP's configuration URL, the `clientID` set to the `sample-openliberty-keycloak` client, and the `clientSecret` set to `sample-openliberty-keycloak`'s client secret. The `redirectToOriginalResource` is set to true, so that the browser will redirect to the original resource request after authentication. The `notifyProvider` is set to true, so that the browser will also redirect to the Keycloak OP's `end_session_endpoint` in the event of a logout. The `@DeclareRoles` annotation declares the `admin` role and the `user role`.
+For the `gateway` service, an `@OpenIdAuthenticationMechanismDefinition` is defined which has its `providerURI` set to the Keycloak OP's configuration URL, the `clientID` set to the `sample-openliberty-keycloak` client, and the `clientSecret` set to `sample-openliberty-keycloak`'s client secret. The `redirectToOriginalResource` is set to true, so that the browser will redirect to the original resource request after authentication. The `notifyProvider` is set to true, so that the browser will also redirect to the Keycloak OP's `end_session_endpoint` in the event of a logout. The `@DeclareRoles` annotation declares the `admin` role and the `user` role.
 
 ```java
 @OpenIdAuthenticationMechanismDefinition(
