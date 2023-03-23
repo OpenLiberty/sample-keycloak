@@ -56,7 +56,7 @@ Log out of the current user by visiting the logout endpoint at the http://localh
 
 ### Keycloak
 
-Keycloak was used as the OpenId Connect Provider (OP) for this sample app. The `openliberty` realm was created in Keycloak. Inside this realm, the `sample-openliberty-keycloak` client was created which has the valid redirect URI's set to `http://localhost:9090/*`, client authentication enabled, and the `microprofile-jwt` client scope enabled. Additionally, the `admin` and `user` roles were created for this realm. Lastly, the `alice` user was created which has the `user` role and the `bob` user was created which has the `admin` role and the `user` role.
+Keycloak was used as the OpenId Connect Provider (OP) for this sample app. The `openliberty` realm was created in Keycloak. Inside this realm, the `sample-openliberty-keycloak` client was created which has the valid redirect URI's set to `http://localhost:9090/*`, client authentication enabled, and the `microprofile-jwt` client scope enabled. Additionally, the `admin` and `user` roles were created for this realm. Lastly, the `alice` user was created which has the `user` role and the `bob` user was created which has the `admin` role and the `user` role. Visit the http://localhost:8080/admin/master/console/#/openliberty URL and sign in using the `admin` username and `admin` password to view the `openliberty` realm.
 
 The Keycloak OP's configuration can found at the http://localhost:8080/realms/openliberty/.well-known/openid-configuration URL.
 
