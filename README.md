@@ -66,17 +66,19 @@ The `system` service secures its endpoints using MicroProfile JWT. By adding the
 
 For the `/username` endpoint, it requires that the Bearer token's `roles` claim include the `admin` role.
 
+[SystemResource.java](https://github.com/OpenLiberty/sample-keycloak/blob/main/src/system/src/main/java/io/openliberty/guides/system/SystemResource.java#L21-L26)
 ```java
 @GET
 @Path("/username")
 @RolesAllowed({ "admin" })
 public String getUsername() {
-    return systemService.getUsername(openIdContext.getAccessToken().getToken());
+    return System.getProperties().getProperty("user.name");
 }
 ```
 
 The following lines in the `microprofile-config.properties` file are required for MicroProfile JWT to validate that the Bearer token was issued from the correct source and has not been tampered with.
 
+[microprofile-config.properties](https://github.com/OpenLiberty/sample-keycloak/blob/main/src/system/src/main/webapp/META-INF/microprofile-config.properties#L1-L2)
 ```properties
 mp.jwt.verify.issuer=http://localhost:8080/realms/openliberty
 mp.jwt.verify.publickey.location=http://localhost:8080/realms/openliberty/protocol/openid-connect/certs
@@ -90,6 +92,7 @@ The `gateway` service is used to obtain a JWT access token from Keycloak and pro
 
 For the `gateway` service, an `@OpenIdAuthenticationMechanismDefinition` is defined which has its `providerURI` set to the Keycloak OP's configuration URL, the `clientID` set to the `sample-openliberty-keycloak` client, and the `clientSecret` set to `sample-openliberty-keycloak`'s client secret. The `redirectToOriginalResource` is set to true, so that the browser will redirect to the original resource request after authentication. The `notifyProvider` is set to true, so that the browser will also redirect to the Keycloak OP's `end_session_endpoint` in the event of a logout. The `@DeclareRoles` annotation declares the `admin` role and the `user` role.
 
+[AuthResource.java](https://github.com/OpenLiberty/sample-keycloak/blob/main/src/gateway/src/main/java/io/openliberty/guides/gateway/auth/AuthResource.java#L27-L33)
 ```java
 @OpenIdAuthenticationMechanismDefinition(
         providerURI = "http://localhost:8080/realms/openliberty/.well-known/openid-configuration",
@@ -102,6 +105,7 @@ For the `gateway` service, an `@OpenIdAuthenticationMechanismDefinition` is defi
 
 Now, adding the `@RolesAllowed` annotation to a JAX-RS endpoint will start a new OpenId Connect (OIDC) authorization code flow. The roles specified in the annotation for the `/username` endpoint in the `gateway` service should match the roles for the `/username` endpoint in the `system` service. If successful, an access token is obtained from the `OpenIdContext` and is propagated to the `system` service as a Bearer token in the `Authorization` header via MicroProfile Rest Client.
 
+[SystemResource.java](https://github.com/OpenLiberty/sample-keycloak/blob/main/src/gateway/src/main/java/io/openliberty/guides/gateway/system/SystemResource.java#L32-L37)
 ```java
 @GET
 @Path("/username")
