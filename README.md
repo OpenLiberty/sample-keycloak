@@ -52,13 +52,15 @@ Log out of the current user by visiting the logout endpoint at the http://localh
 
 ## How it works
 
+![Token propagation diagram](/assets/diagram.png)
+
 ### Keycloak
 
 Keycloak was used as the OpenId Connect Provider (OP) for this sample app. The `openliberty` realm was created in Keycloak. Inside this realm, the `sample-openliberty-keycloak` client was created which has the valid redirect URI's set to `http://localhost:9090/*`, client authentication enabled, and the `microprofile-jwt` client scope enabled. Additionally, the `admin` and `user` roles were created for this realm. Lastly, the `alice` user was created which has the `user` role and the `bob` user was created which has the `admin` role and the `user` role.
 
 The Keycloak OP's configuration can found at the http://localhost:8080/realms/openliberty/.well-known/openid-configuration URL.
 
-### MicroProfile JWT
+### System Service
 
 The `system` service secures its endpoints using MicroProfile JWT. By adding the `@RolesAllowed` annotation to a JAX-RS endpoint, the runtime will check `Authentication` HTTP request header for a Bearer token. The Bearer token must be in JWT format and include the specified role in the annotation in the JWT's `roles` claim in order to access the endpoint.
 
@@ -82,7 +84,7 @@ mp.jwt.verify.publickey.location=http://localhost:8080/realms/openliberty/protoc
 
 The `mp.jwt.verify.issuer` should match the `issuer` value in the Keycloak OP config. The runtime will validate that the Bearer token's `iss` claim matches the `mp.jwt.verify.issuer` value. The `mp.jwt.verify.publickey.location` should match the `jwks_uri` value in the Keycloak OP config. The runtime will validate the Bearer token's signature with the public key found at the Keycloak OP's JSON Web Key (JWK) Set endpoint.
 
-### Jakarta EE Security
+### Gateway Service
 
 The `gateway` service is used to obtain a JWT access token from Keycloak and propagates it to the MicroProfile JWT secured `system` service.
 
